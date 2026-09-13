@@ -1,0 +1,15 @@
+{
+  "name": "Liebegg Trainer",
+  "short_name": "Liebegg",
+  "description": "Prüfungstrainer Pflanzenbau A1.1 / A1.2 – Boden befahren und bearbeiten",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "de-CH",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
