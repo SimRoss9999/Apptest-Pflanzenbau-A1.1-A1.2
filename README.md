@@ -1,13 +1,17 @@
 # Liebegg Trainer
 
-Prüfungstrainer für Pflanzenbau **A1.1 – Boden befahren und bearbeiten** und **A1.2 – Bodenbearbeitungsmassnahmen bestimmen und planen**, Berufsfachschule Liebegg, ZWAL 1.
+Prüfungstrainer für die Berufsfachschule Liebegg, ZWAL 1. Am Start wählst du die Prüfung:
+
+- **Pflanzenbau A1.1 und A1.2**: Boden befahren und bearbeiten (302 Fragen)
+- **Tierhaltung B1.1 und B1.2**: Mit Rindern artgerecht und sicher umgehen, für das Wohlbefinden der Tiere sorgen (175 Fragen)
 
 Statische Webapp ohne Build-Schritt und ohne Backend. Für die Bedienung am Handy gebaut.
 
 ## Was drin ist
 
-- 302 Multiple-Choice-Fragen, jede mit Erklärung und Quellenangabe
-- 10 Themenbereiche plus Modus «Alles»
+- 477 Multiple-Choice-Fragen in zwei Prüfungen, jede mit Erklärung und Quellenangabe
+- Pro Prüfung eigene Themenbereiche plus Modus «Alles»
+- Pro Prüfung ein eigener Verlauf
 - Frei wählbare Fragenzahl pro Durchlauf (10 / 20 / 30 / 50 / alle)
 - Fragen und Antwortoptionen werden bei jedem Durchlauf neu gemischt
 - Sofortiges Feedback nach jeder Antwort
@@ -15,7 +19,28 @@ Statische Webapp ohne Build-Schritt und ohne Backend. Für die Bedienung am Hand
 - Verlauf der letzten 40 Durchläufe, lokal im Browser gespeichert
 - Tastaturbedienung am Desktop: `A`–`D` zum Antworten, `Enter` für weiter
 
-## Quellen der Fragen
+## Prüfung Tierhaltung
+
+Die Fragen stammen aus den Lernzielen und den Arbeitsdossiers mit Lösungen (Hauptbasis), dem Heft, den Präsentationen und dem Arbeitsblatt Tierwohlprogramme. Die falschen Antworten sind so gebaut, dass sie aus Nachbarfakten oder typischen Rechenfehlern entstehen. Die Antwortlängen sind ausgeglichen, die richtige Antwort ist nicht systematisch die längste.
+
+| Bereich | Fragen |
+|---|---|
+| Sinneswahrnehmungen des Rindes | 16 |
+| Reaktion, Kopfhaltung und Gefahren | 15 |
+| Beziehung zum Rind aufbauen | 8 |
+| Herde, Auslauf, Treiben und Beobachten | 20 |
+| Fellpflege | 5 |
+| Tierschutz, Kuhsignale und Kuhtrainer | 17 |
+| BTS, RAUS, Weidebeitrag und Beiträge | 20 |
+| Liegebereich und Stallsysteme | 20 |
+| Fressen und Trinken | 13 |
+| Laufbereich, Böden und behornte Kühe | 10 |
+| Licht, Temperatur, Feuchtigkeit und Schadgase | 23 |
+| Zusatz (Heft Kap. 4, nicht in den Lernzielen) | 8 |
+
+Nicht enthalten: Anatomie (braucht die Abbildungen) und Inhalte des Kontrollhandbuchs. Die Beitragstabelle wird über die Sätze aus dem Arbeitsblatt gerechnet.
+
+## Quellen der Fragen (Pflanzenbau)
 
 | Quelle | Umfang |
 |---|---|
@@ -25,7 +50,7 @@ Statische Webapp ohne Build-Schritt und ohne Backend. Für die Bedienung am Hand
 
 Die Quellenangabe steht bei jeder Frage im Feld `s` und wird im Feedback angezeigt.
 
-## Themenbereiche
+## Themenbereiche (Pflanzenbau)
 
 | Bereich | Lernziele | Fragen |
 |---|---|---|

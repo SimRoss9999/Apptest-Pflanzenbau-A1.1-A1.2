@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="description" content="Prüfungstrainer Pflanzenbau A1.1 / A1.2 – Boden befahren und bearbeiten">
+<meta name="description" content="Prüfungstrainer Liebegg: Pflanzenbau A1.1 / A1.2 und Tierhaltung B1.1 / B1.2">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -249,6 +249,12 @@ h2:first-of-type{margin-top:0}
 .empty{color:var(--muted);font-size:14.5px;border:1px dashed var(--line);border-radius:7px;padding:22px 16px;text-align:center}
 
 .hint{color:var(--muted);font-size:13px;margin:12px 0 0}
+.switch{
+  background:none;border:none;padding:0;margin:12px 0 0;
+  font:inherit;font-size:13px;color:var(--green-dim);cursor:pointer;
+  font-family:ui-monospace,Menlo,monospace;letter-spacing:.04em;
+}
+.switch:hover,.switch:focus-visible{color:var(--green)}
 .hide{display:none!important}
 :focus-visible{outline:2px solid var(--green);outline-offset:2px}
 </style>
@@ -256,11 +262,22 @@ h2:first-of-type{margin-top:0}
 <body>
 <div class="wrap">
 
-<!-- ========== START ========== -->
-<section id="view-start">
+<!-- ========== PRÜFUNGSWAHL ========== -->
+<section id="view-exam">
   <header>
     <h1 class="brand">LIEBEGG_TRAINER<span class="cursor">_</span></h1>
-    <p class="sub">Pflanzenbau A1.1 &amp; A1.2 &middot; Boden befahren und bearbeiten</p>
+    <p class="sub">Welche Prüfung möchtest du üben?</p>
+  </header>
+  <h2>PRÜFUNG</h2>
+  <div id="exams"></div>
+</section>
+
+<!-- ========== START ========== -->
+<section id="view-start" class="hide">
+  <header>
+    <h1 class="brand">LIEBEGG_TRAINER<span class="cursor">_</span></h1>
+    <p class="sub" id="examSub"></p>
+    <button class="switch" id="switchBtn" type="button">&lt; Prüfung wechseln</button>
   </header>
 
   <h2>BEREICH</h2>
@@ -275,7 +292,7 @@ h2:first-of-type{margin-top:0}
   <button class="btn btn-ghost hide" id="clearHist" style="margin-top:10px">Verlauf löschen</button>
 </section>
 
-<div class="sticky" id="startBar">
+<div class="sticky hide" id="startBar">
   <div class="sticky-inner">
     <button class="btn" id="startBtn">Test starten</button>
   </div>
@@ -325,14 +342,38 @@ h2:first-of-type{margin-top:0}
 </div>
 
 <script src="questions.js"></script>
+<script src="questions-tierhaltung.js"></script>
 <script>
 (function(){
 "use strict";
 
-const KEY = 'liebegg_history_v1';
 const LETTERS = ['A','B','C','D','E'];
 
+/* Prüfungen. Der Verlaufsschlüssel von Pflanzenbau bleibt unverändert,
+   damit bestehende Durchläufe erhalten bleiben. */
+const EXAMS = {
+  pflanzenbau: {
+    id: 'pflanzenbau',
+    title: 'Pflanzenbau A1.1 & A1.2',
+    sub: 'Boden befahren und bearbeiten',
+    allLabel: 'Alles (A1.1 + A1.2)',
+    cats: CATEGORIES,
+    qs: QUESTIONS,
+    key: 'liebegg_history_v1'
+  },
+  tierhaltung: {
+    id: 'tierhaltung',
+    title: 'Tierhaltung B1.1 & B1.2',
+    sub: 'Mit Rindern umgehen und für das Wohlbefinden sorgen',
+    allLabel: 'Alles (B1.1 + B1.2)',
+    cats: CATEGORIES_TIER,
+    qs: QUESTIONS_TIER,
+    key: 'liebegg_history_tier_v1'
+  }
+};
+
 const state = {
+  exam: null,
   cat: 'all',
   count: 20,
   queue: [],
@@ -353,19 +394,21 @@ function shuffle(arr){
   return a;
 }
 function poolFor(cat){
-  return cat === 'all' ? QUESTIONS : QUESTIONS.filter(q => q.c === cat);
+  const qs = state.exam.qs;
+  return cat === 'all' ? qs : qs.filter(q => q.c === cat);
 }
 function catName(id){
-  if(id === 'all') return 'Alles (A1.1 + A1.2)';
-  const c = CATEGORIES.find(c => c.id === id);
+  if(id === 'all') return state.exam.allLabel;
+  const c = state.exam.cats.find(c => c.id === id);
   return c ? c.name : id;
 }
-function loadHist(){
-  try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+function loadHistFor(exam){
+  try { return JSON.parse(localStorage.getItem(exam.key)) || []; }
   catch(e){ return []; }
 }
+function loadHist(){ return loadHistFor(state.exam); }
 function saveHist(list){
-  try { localStorage.setItem(KEY, JSON.stringify(list.slice(0,40))); }
+  try { localStorage.setItem(state.exam.key, JSON.stringify(list.slice(0,40))); }
   catch(e){ /* Speicher voll oder gesperrt - Verlauf geht verloren, Test läuft weiter */ }
 }
 function fmtDate(ts){
@@ -374,7 +417,7 @@ function fmtDate(ts){
   return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear()+' &middot; '+p(d.getHours())+':'+p(d.getMinutes());
 }
 function show(view){
-  ['start','quiz','result'].forEach(v=>{
+  ['exam','start','quiz','result'].forEach(v=>{
     $('view-'+v).classList.toggle('hide', v !== view);
   });
   $('startBar').classList.toggle('hide', view !== 'start');
@@ -383,11 +426,41 @@ function show(view){
   window.scrollTo(0,0);
 }
 
+/* ---------- Prüfungswahl ---------- */
+function renderExams(){
+  const box = $('exams');
+  box.innerHTML = '';
+  Object.keys(EXAMS).forEach(id=>{
+    const ex = EXAMS[id];
+    const runs = loadHistFor(ex).length;
+    const b = document.createElement('button');
+    b.className = 'cat';
+    b.type = 'button';
+    b.innerHTML =
+      '<div class="cat-body"><div class="cat-name"></div><div class="cat-meta"></div></div>' +
+      '<span class="cat-n"></span>';
+    b.querySelector('.cat-name').textContent = ex.title;
+    b.querySelector('.cat-meta').textContent = ex.sub + ' · ' + (runs ? runs + (runs === 1 ? ' Durchlauf' : ' Durchläufe') : 'noch kein Durchlauf');
+    b.querySelector('.cat-n').textContent = ex.qs.length;
+    b.addEventListener('click', ()=> selectExam(id));
+    box.appendChild(b);
+  });
+}
+
+function selectExam(id){
+  state.exam = EXAMS[id];
+  state.cat = 'all';
+  state.count = 20;
+  $('examSub').textContent = state.exam.title + ' · ' + state.exam.sub;
+  renderCats(); renderCounts(); renderHist();
+  show('start');
+}
+
 /* ---------- Startbildschirm ---------- */
 function renderCats(){
   const box = $('cats');
   box.innerHTML = '';
-  const all = [{id:'all', name:'Alles', lz:'Gesamter Prüfungsstoff'}].concat(CATEGORIES);
+  const all = [{id:'all', name:'Alles', lz:'Gesamter Prüfungsstoff'}].concat(state.exam.cats);
   all.forEach(c=>{
     const n = poolFor(c.id).length;
     const b = document.createElement('button');
@@ -627,6 +700,7 @@ function showResult(name, ts, fresh){
 
 /* ---------- Verdrahtung ---------- */
 $('startBtn').addEventListener('click', start);
+$('switchBtn').addEventListener('click', ()=>{ renderExams(); show('exam'); });
 $('nextBtn').addEventListener('click', next);
 $('againBtn').addEventListener('click', start);
 $('homeBtn').addEventListener('click', ()=>{ renderHist(); renderCats(); renderCounts(); show('start'); });
@@ -637,7 +711,7 @@ $('abortBtn').addEventListener('click', ()=>{
 });
 $('clearHist').addEventListener('click', ()=>{
   if(confirm('Gesamten Verlauf löschen?')){
-    try { localStorage.removeItem(KEY); } catch(e){}
+    try { localStorage.removeItem(state.exam.key); } catch(e){}
     renderHist();
   }
 });
@@ -653,9 +727,8 @@ document.addEventListener('keydown', e=>{
   }
 });
 
-renderCats();
-renderCounts();
-renderHist();
+renderExams();
+show('exam');
 })();
 </script>
 </body>

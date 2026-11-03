@@ -1,7 +1,7 @@
 {
   "name": "Liebegg Trainer",
   "short_name": "Liebegg",
-  "description": "Prüfungstrainer Pflanzenbau A1.1 / A1.2 – Boden befahren und bearbeiten",
+  "description": "Prüfungstrainer Liebegg: Pflanzenbau A1.1 / A1.2 und Tierhaltung B1.1 / B1.2",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
