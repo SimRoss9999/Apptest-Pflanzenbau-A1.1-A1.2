@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="description" content="Prüfungstrainer Liebegg: Pflanzenbau A1.1 / A1.2 und Tierhaltung B1.1 / B1.2">
+<meta name="description" content="Prüfungstrainer Liebegg: Pflanzenbau A1.1 / A1.2, Tierhaltung B1.1 / B1.2 und Pflanzenbau A6.2">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -343,6 +343,7 @@ h2:first-of-type{margin-top:0}
 
 <script src="questions.js"></script>
 <script src="questions-tierhaltung.js"></script>
+<script src="questions-kunstwiesen.js"></script>
 <script>
 (function(){
 "use strict";
@@ -369,6 +370,15 @@ const EXAMS = {
     cats: CATEGORIES_TIER,
     qs: QUESTIONS_TIER,
     key: 'liebegg_history_tier_v1'
+  },
+  kunstwiesen: {
+    id: 'kunstwiesen',
+    title: 'Pflanzenbau A6.2',
+    sub: 'Mischungen für Kunstwiesen wählen und bewirtschaften',
+    allLabel: 'Alles (A6.2)',
+    cats: CATEGORIES_KW,
+    qs: QUESTIONS_KW,
+    key: 'liebegg_history_kw_v1'
   }
 };
 
